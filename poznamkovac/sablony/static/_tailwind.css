@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+abbr[title] {
+  text-underline-offset: 4px;
+  text-decoration: underline dotted rgb(123, 123, 123) 1px;
+}
+
+
+.zvyraznovac {
+    position: relative;
+    display: inline-block;
+    padding: 0.2rem 0.4rem;
+    --farba: yellow;
+    z-index: 10;
+}
+  
+.zvyraznovac::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--farba);
+    opacity: 0.2;
+    z-index: -10;
+}
+
+
+ul {
+    list-style-type: disc;
+}
+
+ol {
+    list-style-type: decimal;
+}
+
+ul, ol {
+    margin-left: 1rem;
+}

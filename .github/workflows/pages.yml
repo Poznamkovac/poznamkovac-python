@@ -1,0 +1,59 @@
+name: Deploy GH page
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/configure-pages@v2
+
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+          cache-dependency-path: 'tailwind/package-lock.json'
+
+
+      - name: Konvertovať šablóny a poznámky
+        run: |
+          pip install -r requirements.txt
+          python3 -m poznamkovac
+
+      - name: Zkompilovať Tailwind
+        run: |
+          cd ./tailwind
+          npm ci
+          bash compile.sh
+
+
+      - name: Nahrať artefakt
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: 'site'
+
+      - name: Nasadiť GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1

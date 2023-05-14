@@ -1,0 +1,9 @@
+__pycache__/
+
+.venv/
+node_modules/
+
+**/static/compiled*.css
+
+site/
+**/_/

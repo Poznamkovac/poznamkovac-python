@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <title>Poznámkovač - {{ title|default('Poznámkovač') }}</title>
+
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link rel="stylesheet" href="/static/compiled.min.css"/>
+
+    <link rel="stylesheet" href="https://unpkg.com/vis-network@9/dist/dist/vis-network.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://unpkg.com/vis-network@9/dist/vis-network.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://unpkg.com/@popperjs/core@2" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/tippy.js@6" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="/static/pojmova_mapa.js"></script>
+    <script type="text/javascript">
+        function prepnutTmavyRezim(mode=null) {
+            const html = document.getElementsByTagName('html')[0];
+            const tmavyRezim = mode !== null ? mode : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+            
+            if (tmavyRezim) {
+                html.classList = 'dark';
+            } else {
+                html.classList = ''
+            }
+
+            let link = document.createElement('link');
+            link.rel = "stylesheet";
+            link.crossOrigin = "anonymous";
+            link.referrerPolicy = "no-refferer";
+
+            if (tmavyRezim) {
+                link.integrity = "sha512-Mo2QuokS9Y0JOuzVLUh3o9A07RqSXcpc2KC9LXxOwfaBgPt8ZHRiDfGQ2+tZw7xIno+ViWipTNLg1StC6TmwMA==";
+                link.href = "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-dark.min.css";
+            } else {
+                link.integrity = "sha512-bm684OXnsiNuQSyrxuuwo4PHqr3OzxPpXyhT66DA/fhl73e1JmBxRKGnO/nRwWvOZxJLRCmNH7FII+Yn1JNPmg==";
+                link.href = "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-light.min.css";
+            }
+
+            document.head.appendChild(link);
+        };
+
+        prepnutTmavyRezim();
+    </script>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-800">
+    <div class="flex flex-col min-h-screen">
+        <header class="bg-gray-100 shadow dark:bg-gray-800 print:hidden">
+            <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Poznámkovač</h1>
+            </div>
+        </header>
+
+        <main class="flex-grow text-gray-900 bg-white dark:bg-gray-900 dark:text-gray-100">
+            <div class="mx-auto max-w-7xl">
+                {% block content %}{% endblock content %}
+            </div>
+        </main>
+
+        <footer class="bg-gray-100 shadow dark:bg-gray-800 print:hidden">
+            <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <p class="text-center text-gray-900 dark:text-gray-100">
+                    Poznámkovač je aplikácia s <a href="https://github.com/SKevo18/poznamkovac" class="font-bold text-blue-700 dark:text-blue-300 hover:underline">otvoreným zdrojovým kódom</a>.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script type="text/javascript">
+        window.addEventListener('beforeprint', () => {
+            prepnutTmavyRezim(false);
+        });
+
+        window.addEventListener('afterprint', () => {
+            prepnutTmavyRezim();
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var abbrElementy = document.querySelectorAll('abbr[title]');
+
+            abbrElementy.forEach(function(abbr) {
+                abbr.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+
+                    var titulok = this.getAttribute('title');
+                    alert(titulok);
+                });
+            });
+        });
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{% extends "_base.html" %}
+
+{% block content %}
+    <div id="pojmova_mapa" class="print:hidden" style="height: 75vh;"></div>
+
+    <article class="p-4 markdown-body md:p-8" style="background-color: transparent;">
+        {{ poznamky|safe }}
+    </article>
+
+    <script type="text/javascript">
+        const DATA = {{ pojmova_mapa|safe }}; // eslint-disable-line
+
+        vytvoritPojmovuMapu(DATA);
+    </script>
+{% endblock content %}
