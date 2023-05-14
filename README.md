@@ -16,7 +16,7 @@ Poznámkovač je čo najautomatizovanejší a obsahuje rôzne funkcie:
 - Z nadpisov sa automaticky vytvorí a usporiada pojmová mapa (viď. obrázok vyššie);
   - Prejdením myšou (alebo kliknutím, ak máte zariadenie s dotykovou obrazovkou) sa zobrazí poznámka priliehajúca tejto bunke, a zvýraznia sa bunky ktoré s tým súvisia;
   - Kliknutím (alebo pre mobilné zariadenia dvojitým kliknutím) na bunku v pojmovej mape sa prenesiete priamo na miesto tejto poznámky;
-- Zdrojový kód je komentovaný a [súkromné použitie je povolené](https://creativecommons.org/licenses/by-nc/4.0/);
+- Zdrojový kód je komentovaný a licensovaný pod [GNU General Public License v3.0](https://choosealicense.com/licenses/gpl-3.0/);
 
 ## Technológie
 
