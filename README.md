@@ -58,7 +58,7 @@ Som otvorený pre návrhy na nové funkcie (prostredníctvom issues).
 
 Ak máte záujem prispieť k vývoju Poznámkovača, neváhajte vytvoriť pull request s Vašimi zmenami/poznámkami alebo navrhnúť nové funkcie prostredníctvom issues.
 
-Môžete taktiež tento projekt [sponzorovať](https://github.com/sponsors/SKevo18).
+Môžete taktiež tento projekt [sponzorovať cez GitHub](https://github.com/sponsors/SKevo18) a tým ma finančne podporiť. Ďakujem!
 
 ## Licencia
 
