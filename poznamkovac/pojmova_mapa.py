@@ -82,9 +82,12 @@ def vytvorit_vis_json(json_nadpisy: t.List[Nadpis]) -> t.Dict[str, ListDict]:
     tooltipy: ListDict = []
     """Zoznam tooltipov (pre Tippy)"""
 
-
     zasobnik = []
     """Zásobník obsahuje nadpisy, ktoré ešte nemajú uzatvorený obsah (t. j.: neobsahujú žiadne ďalšie nadpisy)."""
+
+
+    # Premenná pre sledovanie aktuálneho čísla farby (pre rozdielne farby vetví na rovnakom leveli)
+    aktualna_farba = 1
 
     for nadpis in json_nadpisy:
         id_bunky = len(bunky) + 1
@@ -96,9 +99,15 @@ def vytvorit_vis_json(json_nadpisy: t.List[Nadpis]) -> t.Dict[str, ListDict]:
                 'content': nadpis['content']
             })
 
+
         # Keď nájdeme nadpis, ktorý má rovnakú alebo nižšiu úroveň, uzavrieme predchádzajúci nadpis.
         while zasobnik and zasobnik[-1]['level'] >= nadpis['level']:
             zasobnik.pop()
+
+            # Zmena farby, keď prichádzame na novú vetvu rovnakej úrovne
+            if zasobnik[-1]['level'] == nadpis['level']:
+                aktualna_farba *= -1
+
 
         # Ak zásobník nie je prázdny, pridáme spojenie od posledného nadpisu v zásobníku k aktuálnemu nadpisu
         if zasobnik:
@@ -106,6 +115,7 @@ def vytvorit_vis_json(json_nadpisy: t.List[Nadpis]) -> t.Dict[str, ListDict]:
                 'from': zasobnik[-1]['id'],
                 'to': id_bunky
             })
+
 
         # Pridáme aktuálny nadpis do zásobníka:
         zasobnik.append({'id': id_bunky, 'level': nadpis['level']})
@@ -115,14 +125,16 @@ def vytvorit_vis_json(json_nadpisy: t.List[Nadpis]) -> t.Dict[str, ListDict]:
             'id': id_bunky,
             'label': nadpis['title'],
             'level': nadpis['level'],
-            'color': generovat_farbu(nadpis['level'])
+            'color': generovat_farbu(aktualna_farba * nadpis['level'])
         })
+
 
     return {
         'bunky': bunky,
         'spojenia': spojenia,
         'tooltipy': tooltipy
     }
+
 
 
 def vytvorit_pojmovu_mapu(markdown_text: str) -> t.Dict[str, ListDict]:
