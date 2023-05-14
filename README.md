@@ -12,7 +12,8 @@ Poznámkovač je čo najautomatizovanejší a obsahuje rôzne funkcie:
 
 - Všetky poznámky sa píšu v [Markdown (`.md`) formáte](https://daringfireball.net/projects/markdown/);
   - Poznámkovač používa [Pythonov Markdown modul](https://python-markdown.github.io/);
-  - [BB kód](https://bbcode.readthedocs.io/en/latest/tags.html) je taktiež podporovaný;
+    - Tento modul je obohatený o doplnky, ako je napríklad [Pipetables](https://www.markdownguide.org/extended-syntax/#tables) alebo podpora pre [Mermaid](https://mermaid.js.org/) diagramy;
+  - [BB kód](https://bbcode.readthedocs.io/en/latest/tags.html) je taktiež podporovaný, navyše s podporou pre ďalšie kódy, akými sú napr.: `{z}{/z}` pre zvýraznenie;
 - Z nadpisov sa automaticky vytvorí a usporiada pojmová mapa (viď. obrázok vyššie);
   - Prejdením myšou (alebo kliknutím, ak máte zariadenie s dotykovou obrazovkou) sa zobrazí poznámka priliehajúca tejto bunke, a zvýraznia sa bunky ktoré s tým súvisia;
   - Kliknutím (alebo pre mobilné zariadenia dvojitým kliknutím) na bunku v pojmovej mape sa prenesiete priamo na miesto tejto poznámky;

@@ -8,7 +8,7 @@ from markdown.extensions.smarty import SmartyExtension
 from markdown.extensions.meta import MetaExtension
 from markdown.extensions.footnotes import FootnoteExtension
 
-from pymdownx.superfences import SuperFencesCodeExtension
+from pymdownx.superfences import SuperFencesCodeExtension, fence_div_format
 
 
 OBSAH = '[obsah]'
@@ -29,7 +29,11 @@ def konvertovat_markdown(markdown_text: str) -> str:
         SmartyExtension(),
         MetaExtension(),
         FootnoteExtension(),
-        SuperFencesCodeExtension()
+        SuperFencesCodeExtension(custom_fences=[{
+            'name': "mermaid",
+            'class': "mermaid",
+            'format': fence_div_format
+        }])
     ], tab_length=2)
 
     return markdown_konvertor.convert(markdown_text)
