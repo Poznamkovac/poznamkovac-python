@@ -30,12 +30,15 @@ NADPISY_REGEX = re.compile(r'^(#+)\s?([^#\n]+)\s*([^#]+)\s*', flags=re.MULTILINE
 
 
 def generovat_farbu(cislo: int) -> str:
-    h_md5 = hashlib.md5()
+    hash_hex = hashlib.md5(str(cislo).encode('utf-8')).hexdigest()
 
-    h_md5.update(str(cislo).encode('utf-8'))
-    hash_hex = h_md5.hexdigest()
+    # Konvertovať HEX na int
+    hash_int = [int(hash_hex[x:x + 2], 16) for x in range(0, len(hash_hex), 2)]
 
-    return f'#{hash_hex[:6]}'
+    # Konvertovať int na svetlú farbu
+    svetla_farba = [hex(min(int(x * 0.75) + 75, 255))[2:].zfill(2) for x in hash_int]
+
+    return f'#{"".join(svetla_farba[:3])}'
 
 
 
@@ -100,7 +103,7 @@ def vytvorit_vis_json(json_nadpisy: t.List[Nadpis]) -> t.Dict[str, ListDict]:
             })
 
 
-        # Keď nájdeme nadpis, ktorý má rovnakú alebo nižšiu úroveň, uzavrieme predchádzajúci nadpis.
+        # Keď nájdeme nadpis, ktorý má rovnakú alebo nižšiu úroveň, uzavrieme predchádzajúci nadpis:
         while zasobnik and zasobnik[-1]['level'] >= nadpis['level']:
             zasobnik.pop()
 
@@ -109,7 +112,7 @@ def vytvorit_vis_json(json_nadpisy: t.List[Nadpis]) -> t.Dict[str, ListDict]:
                 aktualna_farba *= -1
 
 
-        # Ak zásobník nie je prázdny, pridáme spojenie od posledného nadpisu v zásobníku k aktuálnemu nadpisu
+        # Ak zásobník nie je prázdny, pridáme spojenie od posledného nadpisu v zásobníku k aktuálnemu nadpisu:
         if zasobnik:
             spojenia.append({
                 'from': zasobnik[-1]['id'],
@@ -125,7 +128,21 @@ def vytvorit_vis_json(json_nadpisy: t.List[Nadpis]) -> t.Dict[str, ListDict]:
             'id': id_bunky,
             'label': nadpis['title'],
             'level': nadpis['level'],
-            'color': generovat_farbu(aktualna_farba * nadpis['level'])
+
+            # Číslo 4 vyústi v pestré a vyvážené farby.
+            #
+            # V maturite snáď nepotrebujem jednotku,
+            # veď štvorka sa mi aj tak v živote hodí.
+            # Kto by chcel byť v škole na potvorku,
+            # tak radšej štvorka a nechť sa mi dobre chodí.
+            #
+            # Nechajme teda tých, čo sa trasú o jednotku,
+            # nehádam sa s nimi o miesto na slnku.
+            # Veď štvorka ma prevedie svetom celkom jemne,
+            # uvidíme všetko, čo život dá mne.
+            #
+            # "Preboha, mládež, len to nezarecitujte predsedníčke!"
+            'color': generovat_farbu(4 - aktualna_farba * nadpis['level'])
         })
 
 
