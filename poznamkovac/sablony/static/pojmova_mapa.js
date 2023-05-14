@@ -130,6 +130,9 @@ function vytvoritPojmovuMapu(DATA) {
     }
 
 
+    let poslednaKliknutaBunkaId;
+    let casPoslednehoKliknutiaNaBunku;
+
     function navigovatNaBunku(bunkaId) {
         function _navigovat() {
             window.location.hash = null;
