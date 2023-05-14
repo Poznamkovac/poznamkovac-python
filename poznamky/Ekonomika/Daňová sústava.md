@@ -349,5 +349,8 @@ DPH
 
 ## Zdroje
 
-  Ing. Eva Bellová;
-  Obchodná Akadémia Nitra, 2023
+```yaml
+  - Ing. Eva Bellová;
+    Obchodná Akadémia Nitra, 2023
+    upravené
+```
