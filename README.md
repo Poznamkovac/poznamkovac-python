@@ -4,6 +4,8 @@ Poznámkovač je aplikácia pre študentov, ktorá bola vytvorená študentom. S
 
 Všetky súbory Markdown poznámok sú na GitHube a statické HTML je generované automaticky.
 
+![Poznámkovač](readme_obrazky/poznamkovac.gif)
+
 ## Technológie
 
 Poznámkovač využíva nasledujúce technológie:
