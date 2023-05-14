@@ -346,3 +346,8 @@ DPH
 *[daň]: Daň je povinná zákonom určená platba, ktorú odvádza FO a PO v určitej výške a stanovenej lehote, má vynútiteľný charakter.
 *[subjekt dane]: Subjektom dane je fyzická alebo právnická osoba, ktorá je povinná platiť daň.
 *[DPH]: Daň z pridanej hodnoty je nepriama daň spotrebného charakteru, ktorú zaplatí konečný spotrebiteľ v nákupnej cene tovaru alebo služby.
+
+## Zdroje
+
+  Ing. Eva Bellová;
+  Obchodná Akadémia Nitra, 2023
