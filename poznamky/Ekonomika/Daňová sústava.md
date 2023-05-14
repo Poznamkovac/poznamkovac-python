@@ -307,24 +307,24 @@ DPH sa odvádza z hodnoty, ktorú platiteľ dane pridal k cene tovarov a služie
 - **Nepriamu (fakturačnú) metódu** - základom tejto metódy je cena, ktorá neobsahuje DPH, potom DPH sa vypočíta ako percento zo ZD:
   - tento spôsob výpočtu sa používa pri bezhotovostnom platobnom styku (*napr.: pri predaji na faktúru*).
 
-[center]
+{center}
 
 ```plain
 DPH = cena bez DPH × sadzba dane (v percentách)
 ```
 
-[/center]
+{/center}
 
 - **Priamu metódu** - základom dane tejto metódy je cena, ktorá obsahuje DPH. DPH vypočítame ako podiel násobku ceny s daňou a sadzby dane a súčtu 100 a sadzby dane.
   - tento spôsob výpočtu sa používa pri hotovostnom platobnom styku, dokladom je zvyčajne výstup z registračnej pokladnice – pokladničný blok.
 
-[center]
+{center}
 
 ```plain
 DPH = (cena s DPH × sadzba dane) ÷ (100 % + sadzba dane)
 ```
 
-[/center]
+{/center}
 
 **Platiteľ dane osobitne sleduje a eviduje**:
 
