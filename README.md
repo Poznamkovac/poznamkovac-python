@@ -4,7 +4,19 @@ Poznámkovač je aplikácia pre študentov, ktorá bola vytvorená študentom. S
 
 Všetky súbory Markdown poznámok sú na GitHube a statické HTML je generované automaticky.
 
+## Funkcie
+
 ![Poznámkovač](readme_obrazky/poznamkovac.gif)
+
+Poznámkovač je čo najautomatizovanejší a obsahuje rôzne funkcie:
+
+- Všetky poznámky sa píšu v [Markdown (`.md`) formáte](https://daringfireball.net/projects/markdown/);
+  - Poznámkovač používa [Pythonov Markdown modul](https://python-markdown.github.io/);
+  - [BB kód](https://bbcode.readthedocs.io/en/latest/tags.html) je taktiež podporovaný;
+- Z nadpisov sa automaticky vytvorí a usporiada pojmová mapa (viď. obrázok vyššie);
+  - Prejdením myšou (alebo kliknutím, ak máte zariadenie s dotykovou obrazovkou) sa zobrazí poznámka priliehajúca tejto bunke, a zvýraznia sa bunky ktoré s tým súvisia;
+  - Kliknutím (alebo pre mobilné zariadenia dvojitým kliknutím) na bunku v pojmovej mape sa prenesiete priamo na miesto tejto poznámky;
+- Zdrojový kód je komentovaný a [súkromné použitie je povolené](https://creativecommons.org/licenses/by-nc/4.0/);
 
 ## Technológie
 
