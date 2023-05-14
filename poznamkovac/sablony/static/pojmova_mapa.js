@@ -138,7 +138,7 @@ function vytvoritPojmovuMapu(DATA) {
             window.location.hash = null;
 
             const titulokBunky = bunky.get(bunkaId).label;
-            const urlHash = '#' + titulokBunky.toLowerCase().normalize("NFD").replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s+/g, "-");
+            const urlHash = '#' + titulokBunky.toLowerCase().normalize("NFD").replace(/[^a-zA-Z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/--+/g, "-");
             window.location.hash = urlHash;
         }
 
