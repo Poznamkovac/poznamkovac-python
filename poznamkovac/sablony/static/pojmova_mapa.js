@@ -171,7 +171,7 @@ function vytvoritPojmovuMapu(DATA) {
         const obsahTooltipu = tooltip !== undefined ? tooltip.content : null;
         if (obsahTooltipu === null) { return }
 
-        tippyInstancia.setContent(`<div class="markdown-body" style="margin: 0; padding: 0; font-size: 12px; background-color: transparent;">${obsahTooltipu}</div>`);
+        tippyInstancia.setContent(`<div class="markdown-body" style="padding: 1rem 0.5rem; font-size: ${jeSirokeZobrazenie ? '14px' : '12px'}; background-color: transparent;">${obsahTooltipu}</div>`);
 
         tippyInstancia.setProps({
             triggerTarget: pojmova_mapa_element,

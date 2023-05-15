@@ -61,7 +61,7 @@ def vytvorit_json_nadpisov(markdown_text: str) -> t.List[Nadpis]:
             continue
 
 
-        poznamky_html = vytvorit_poznamky(obsah)
+        poznamky_html = vytvorit_poznamky(f'<h3 style="text-align: center; color: skyblue;">{titulok}</h3>\n\n{obsah}')
         json_nadpisy.append({
             'level': level,
             'title': titulok,
