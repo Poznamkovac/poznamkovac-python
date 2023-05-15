@@ -6,10 +6,53 @@
     <article class="p-4 markdown-body md:p-8" style="background-color: transparent;">
         {{ poznamky|safe }}
     </article>
+{% endblock content %}
 
+{% block skripty %}
+    {{ super () }}
+
+    <!-- vis-network -->
+    <link rel="stylesheet" href="https://unpkg.com/vis-network@9/dist/dist/vis-network.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://unpkg.com/vis-network@9/dist/vis-network.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Tooltipy -->
+    <script src="https://unpkg.com/@popperjs/core@2" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/tippy.js@6" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Načítanie pojmovej mapy -->
+    <script src="/static/pojmova_mapa.js"></script>
     <script type="text/javascript">
         const DATA = {{ pojmova_mapa|safe }}; // eslint-disable-line
-
         vytvoritPojmovuMapu(DATA);
     </script>
-{% endblock content %}
+
+
+    <!-- Načítanie D3.js a Mermaid -->
+    <script src="https://unpkg.com/d3@7"></script>
+    <script type="module">
+        import mermaid from "https://unpkg.com/mermaid@10/dist/mermaid.esm.min.mjs";
+        mermaid.initialize({ startOnLoad: true, theme: "neutral" });
+
+        window.mermaid = mermaid;
+    </script>
+
+
+    <!-- Približovanie Mermaid diagramov pomocou D3.js -->
+    <script type="text/javascript">
+        setTimeout(() => {
+            var svg_elementy = d3.selectAll(".mermaid svg");
+
+            svg_elementy.each(function () {
+                var svg = d3.select(this);
+                svg.html(`<g>${svg.html()}</g>`);
+                var vnutro = svg.select("g");
+
+                var priblizenie = d3.zoom().on("zoom", (event) => {
+                    vnutro.attr("transform", event.transform);
+                });
+
+                svg.call(priblizenie);
+            });
+        }, 1000);
+    </script>
+{% endblock skripty %}

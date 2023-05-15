@@ -7,45 +7,39 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <link rel="stylesheet" href="/static/compiled.min.css"/>
+    {% block head_linky %}
+        <link rel="stylesheet" href="/static/compiled.min.css"/>
 
-    <link rel="stylesheet" href="https://unpkg.com/vis-network@9/dist/dist/vis-network.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://unpkg.com/vis-network@9/dist/vis-network.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script type="text/javascript">
+            function prepnutTmavyRezim(mode=null) {
+                const tmavyRezim = mode !== null ? mode : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                const html = document.getElementsByTagName('html')[0];
+                
+                if (tmavyRezim) {
+                    html.classList = 'dark';
+                } else {
+                    html.classList = ''
+                }
 
-    <script src="https://unpkg.com/@popperjs/core@2" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://unpkg.com/tippy.js@6" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://unpkg.com/mermaid@9/dist/mermaid.min.js"></script>
+                let link = document.createElement('link');
+                link.rel = "stylesheet";
+                link.crossOrigin = "anonymous";
+                link.referrerPolicy = "no-refferer";
 
-    <script src="/static/pojmova_mapa.js"></script>
-    <script type="text/javascript">
-        function prepnutTmavyRezim(mode=null) {
-            const html = document.getElementsByTagName('html')[0];
-            const tmavyRezim = mode !== null ? mode : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-            
-            if (tmavyRezim) {
-                html.classList = 'dark';
-            } else {
-                html.classList = ''
-            }
+                if (tmavyRezim) {
+                    link.integrity = "sha512-Mo2QuokS9Y0JOuzVLUh3o9A07RqSXcpc2KC9LXxOwfaBgPt8ZHRiDfGQ2+tZw7xIno+ViWipTNLg1StC6TmwMA==";
+                    link.href = "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-dark.min.css";
+                } else {
+                    link.integrity = "sha512-bm684OXnsiNuQSyrxuuwo4PHqr3OzxPpXyhT66DA/fhl73e1JmBxRKGnO/nRwWvOZxJLRCmNH7FII+Yn1JNPmg==";
+                    link.href = "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-light.min.css";
+                }
 
-            let link = document.createElement('link');
-            link.rel = "stylesheet";
-            link.crossOrigin = "anonymous";
-            link.referrerPolicy = "no-refferer";
+                document.head.appendChild(link);
+            };
 
-            if (tmavyRezim) {
-                link.integrity = "sha512-Mo2QuokS9Y0JOuzVLUh3o9A07RqSXcpc2KC9LXxOwfaBgPt8ZHRiDfGQ2+tZw7xIno+ViWipTNLg1StC6TmwMA==";
-                link.href = "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-dark.min.css";
-            } else {
-                link.integrity = "sha512-bm684OXnsiNuQSyrxuuwo4PHqr3OzxPpXyhT66DA/fhl73e1JmBxRKGnO/nRwWvOZxJLRCmNH7FII+Yn1JNPmg==";
-                link.href = "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-light.min.css";
-            }
-
-            document.head.appendChild(link);
-        };
-
-        prepnutTmavyRezim();
-    </script>
+            prepnutTmavyRezim();
+        </script>
+    {% endblock head_linky %}
 </head>
 
 <body class="bg-gray-100 dark:bg-gray-800">
@@ -71,28 +65,29 @@
         </footer>
     </div>
 
-    <script type="text/javascript">
-        window.addEventListener('beforeprint', () => {
-            prepnutTmavyRezim(false);
-        });
+    {% block skripty %}
+        <script type="text/javascript">
+            window.addEventListener('beforeprint', () => {
+                prepnutTmavyRezim(false);
+            });
 
-        window.addEventListener('afterprint', () => {
-            prepnutTmavyRezim();
-        });
+            window.addEventListener('afterprint', () => {
+                prepnutTmavyRezim();
+            });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            var abbrElementy = document.querySelectorAll('abbr[title]');
+            document.addEventListener('DOMContentLoaded', function() {
+                var abbrElementy = document.querySelectorAll('abbr[title]');
 
-            abbrElementy.forEach(function(abbr) {
-                abbr.addEventListener('touchstart', function(e) {
-                    e.preventDefault();
+                abbrElementy.forEach(function(abbr) {
+                    abbr.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
 
-                    var titulok = this.getAttribute('title');
-                    alert(titulok);
+                        var titulok = this.getAttribute('title');
+                        alert(titulok);
+                    });
                 });
             });
-        });
-        
-    </script>
+        </script>
+    {% endblock skripty %}
 </body>
 </html>

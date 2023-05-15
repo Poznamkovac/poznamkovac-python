@@ -15,6 +15,9 @@ BBKOD_KONVERTOR = Parser(
     # Toto za nás urobí `poznamkovac.md`:
     replace_links=False,
 
+    # Toto za nás taktiež urobí `poznamkovac.md`, keďže toto pokazí Mermaid a MathJax syntax
+    replace_cosmetic=False,
+
     # Predvolené nastavenie je `<br />`, to by avšak
     # zamávalo s Markdown nastaveniami, a `\n` by boli zdvojené:
     newline='\n',
