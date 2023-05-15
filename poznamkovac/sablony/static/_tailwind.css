@@ -47,7 +47,11 @@ ul, ol {
     .uceleny-obsah {
         page-break-inside: avoid;
     }
-    
+
+    .nova-strana {
+        page-break-after: always;
+    }
+
     .toc {
         display: none;
     }

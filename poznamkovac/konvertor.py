@@ -75,6 +75,17 @@ def normalizovat_nadpisy(markdown_text: str) -> str:
 
 
 
+def pridat_novu_stranu(obsah: str) -> str:
+    """
+        Nahradí `[nova_strana]` s `<div class="nova-strana"></div>`.
+
+        Pri zobrazení tlače sa v tomto bode vždy strana zlomí.
+    """
+
+    return obsah.replace("[nova_strana]", '<div class="nova-strana"></div>')
+
+
+
 def vytvorit_poznamky(markdown_text: str, normalizovat: bool=True) -> str:
     """
         Vytvorí HTML z BBCode/Markdown textu poznámok.
@@ -89,6 +100,7 @@ def vytvorit_poznamky(markdown_text: str, normalizovat: bool=True) -> str:
 
     html = konvertovat_markdown(markdown_text)
     html = konvertovat_bbkod(html)
+    html = pridat_novu_stranu(html)
 
     return html
 

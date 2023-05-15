@@ -62,6 +62,7 @@ def _zvyraznovac(_, hodnota: str, moznosti: dict[str, str], *__):
 
     return f'<span class="zvyraznovac" style="--farba: {farba};">{hodnota}</span>'
 
+
 BBKOD_KONVERTOR.add_formatter("z", _zvyraznovac)
 BBKOD_KONVERTOR.add_simple_formatter("uceleny_obsah", '<div class="uceleny-obsah">%(value)s</div>')
 
