@@ -3,8 +3,7 @@ import typing as t
 import re
 import hashlib
 
-from poznamkovac.konvertor import vytvorit_poznamky
-from poznamkovac.md import OBSAH
+from poznamkovac.konvertor import vytvorit_poznamky, najst_nadpisy
 
 
 Nadpis = t.TypedDict("Nadpis", {
@@ -13,19 +12,20 @@ Nadpis = t.TypedDict("Nadpis", {
     "title": str,
     "content": str
 })
-"""Typ pre JSON nadpisu"""
+"""Typ pre JSON nadpis"""
+
 
 ListDict = list[dict[str, t.Any]]
 """Typ pre list dictov."""
 
-PRESKOCIT_OBSAH = (OBSAH,)
+PM_PRESKOCIT_OBSAH = tuple()
 """
     Všetok obsah nadpisu ktorý zodpovedá jednému z prvkov
     v tomto zozname nebude zahrnutý v JSON pojmovej mapy
 """
 
-NADPISY_REGEX = re.compile(r'^(#+)\s?([^#\n]+)\s*([^#]+)\s*', flags=re.MULTILINE | re.DOTALL)
-"""Regulárny výraz pre hľadanie nadpisov v markdown texte a ich obsahu"""
+PM_PRESKOCIT_NADPISY = ("Zdroje",)
+"""Tieto nadpisy nebudú zahrnuté v JSON pojmovej mapy"""
 
 
 
@@ -44,20 +44,15 @@ def generovat_farbu(cislo: int) -> str:
 
 def vytvorit_json_nadpisov(markdown_text: str) -> t.List[Nadpis]:
     """
-        Táto funkcia konvertuje markdown text na JSON nadpisov
+        Táto funkcia konvertuje markdown text na JSON nadpisy
     """
 
-    vysledky: list[tuple[str, str, str]] = NADPISY_REGEX.findall(markdown_text)
-    """Všetky zhody regulárneho výrazu pre nadpisy v texte"""
-
     json_nadpisy: t.List[Nadpis] = []
-    """Výsledné JSON nadpisov."""
+    """Výsledné JSON nadpisy."""
 
 
-    for vysledok in vysledky:
-        level, titulok, obsah = len(vysledok[0]), vysledok[1].strip(), vysledok[2].strip()
-
-        if obsah in PRESKOCIT_OBSAH:
+    for level, titulok, obsah in najst_nadpisy(markdown_text):
+        if obsah in PM_PRESKOCIT_OBSAH or titulok in PM_PRESKOCIT_NADPISY:
             continue
 
 
@@ -75,7 +70,7 @@ def vytvorit_json_nadpisov(markdown_text: str) -> t.List[Nadpis]:
 
 def vytvorit_vis_json(json_nadpisy: t.List[Nadpis]) -> t.Dict[str, ListDict]:
     """
-        Vytvorí JSON pre vis.js z JSON mapy nadpisov
+        Vytvorí JSON pre vis.js z JSON nadpisov
     """
     
     bunky: ListDict = []
@@ -108,8 +103,11 @@ def vytvorit_vis_json(json_nadpisy: t.List[Nadpis]) -> t.Dict[str, ListDict]:
             zasobnik.pop()
 
             # Zmena farby, keď prichádzame na novú vetvu rovnakej úrovne
-            if zasobnik[-1]['level'] == nadpis['level']:
-                aktualna_farba *= -1
+            try:
+                if zasobnik[-1]['level'] == nadpis['level']:
+                    aktualna_farba *= -1
+            except IndexError:
+                pass
 
 
         # Ak zásobník nie je prázdny, pridáme spojenie od posledného nadpisu v zásobníku k aktuálnemu nadpisu:

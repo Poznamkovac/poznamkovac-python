@@ -1,22 +1,16 @@
+import typing as t
+
 import re
 
 from poznamkovac.bb_kod import konvertovat_bbkod
 from poznamkovac.md import konvertovat_markdown
 
 
+IterNadpis = t.NamedTuple('IterNadpis', level=int, titulok=str, obsah=t.Text)
+"""Typ pre raw nadpis"""
 
-def vytvorit_poznamky(markdown_text: str) -> str:
-    """
-        Vytvorí HTML z BBCode/Markdown textu poznámok.
-
-        Najskôr sa konvertuje Markdown, následne sa z tohto nového HTML
-        ešte konvertuje BB kód.
-    """
-
-    obsah = konvertovat_markdown(markdown_text)
-    obsah = konvertovat_bbkod(obsah)
-
-    return obsah
+OBSAH_REGEX = re.compile(r'^(#+)\s?([^#\n]+)\s*([^#]+)\s*', flags=re.MULTILINE | re.DOTALL)
+"""Regulárny výraz pre hľadanie nadpisov v markdown texte a ich obsahu"""
 
 
 
@@ -26,8 +20,7 @@ def normalizovat_nadpisy(markdown_text: str) -> str:
         ich normalizuje (odstraňuje prebytočné mriežky, atď...).
     """
 
-    regex = re.compile(r'^(#{7,})\s?([^#\n]+)\s*([^#]+)\s*', flags=re.MULTILINE | re.DOTALL)
-    minus = 1
+    dozadu = 1
     """
         Ak obsah nadpisu (text do ďalšieho nadpisu) obsahuje `\n`,
         tak potom tento nadpis nemožno prevodiť na položku zoznamu.
@@ -41,25 +34,31 @@ def normalizovat_nadpisy(markdown_text: str) -> str:
 
 
     def nahradit_nadpisy(vysledok: re.Match[str]) -> str:
-        nonlocal minus
+        nonlocal dozadu
         nonlocal prva_polozka
 
-        list_level, titulok, obsah = len(vysledok.group(1)) - 6, vysledok.group(2).strip(), vysledok.group(3).strip()
+        list_level, titulok, obsah = len(vysledok.group(1)), vysledok.group(2).strip(), vysledok.group(3).strip()
 
 
-        # Nadpis nemôžno konvertovať:
+        if list_level <= 6:
+            # nepotrebujeme normalizáciu
+            dozadu = 1
+
+            return f"{'#' * list_level} {titulok}\n\n{obsah}\n"
+
         if '\n' in obsah:
-            minus += 1
+            # nadpis nemôžno konvertovať
+            dozadu = list_level - 6
 
-            return f"{'#' * 6} {titulok}\n\n{obsah}\n" # pôvodný text
+            return f"{'#' * 6} {titulok}\n\n{obsah}\n\n" # najvyšší možný nadpis
 
 
-        nove_vlakno = f"{('  ') * (list_level - minus)}- {titulok}" if list_level > 1 else f"- {titulok}"
+        nove_vlakno = f"{'  ' * (list_level - (dozadu + 6))}- {titulok}" if list_level > 1 else f"- {titulok}"
 
         # Ak existuje obsah, t. j. nie je iba prázdny `str`, tak potom
         # za položku v zozname pripojíme aj definíciu (t. j. jednoriadkový obsah):
-        if len(obsah) > 1:
-            nove_vlakno += f" - {obsah}"
+        if obsah:
+            nove_vlakno += f": {obsah}"
 
 
         novy_riadok = f"{nove_vlakno}\n"
@@ -72,4 +71,39 @@ def normalizovat_nadpisy(markdown_text: str) -> str:
 
 
     # Nahradíme obsah pôvodného `markdown_text` s novým, konvertovaným obsahom
-    return re.sub(regex, nahradit_nadpisy, markdown_text)
+    return OBSAH_REGEX.sub(nahradit_nadpisy, markdown_text)
+
+
+
+def vytvorit_poznamky(markdown_text: str, normalizovat: bool=True) -> str:
+    """
+        Vytvorí HTML z BBCode/Markdown textu poznámok.
+
+        Najskôr sa konvertuje Markdown, následne sa z tohto nového HTML
+        ešte konvertuje BB kód.
+
+        Ak je `normalizovat == True`, tak potom sa nadpisy normalizujú (viď. `poznamkovac.konvertor.normalizovat_nadpisy`)
+    """
+
+    markdown_text = normalizovat_nadpisy(markdown_text) if normalizovat else markdown_text
+
+    html = konvertovat_markdown(markdown_text)
+    html = konvertovat_bbkod(html)
+
+    return html
+
+
+
+def najst_nadpisy(markdown_text: str) -> t.Generator[IterNadpis, None, None]:
+    """
+        Generátor obsahu nadpisov
+    """
+
+    vysledky = OBSAH_REGEX.finditer(markdown_text)
+    """Všetky zhody regulárneho výrazu pre obsahy nadpisov a nadpisy v texte"""
+
+
+    for vysledok in vysledky:
+        level, titulok, obsah = len(vysledok.group(1)), vysledok.group(2).strip(), vysledok.group(3).strip()
+
+        yield IterNadpis(level=level, titulok=titulok, obsah=obsah)

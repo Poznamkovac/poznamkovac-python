@@ -2,8 +2,6 @@
 
 # Daňová sústava
 
-## Obsah
-
 [obsah]
 
 ## Štátny rozpočet

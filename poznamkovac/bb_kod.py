@@ -3,7 +3,7 @@ import re
 from bbcode import Parser
 
 
-BBCODE_KONVERTOR = Parser(
+BBKOD_KONVERTOR = Parser(
     # Nechceme cenzurovať HTML ktoré bolo vygenerované `poznamkovac.md`.
     # Toto nastavenie by bolo `True` ak by napr.: bol obsah 100 % vytváraný
     # používateľmi (napr.: na sociálnych sieťach), ale toto nie je ten prípad.
@@ -27,7 +27,7 @@ BBCODE_KONVERTOR = Parser(
 # Z nejakého dôvodu sa aj napriek `escape_html == False`
 # cenzurujú obsahy rôznych tagov, preto manuálne monkey-patchneme
 # `REPLACE_ESCAPE` zoznam znakov z `bbcode.Parser`.
-BBCODE_KONVERTOR.REPLACE_ESCAPE = tuple()
+BBKOD_KONVERTOR.REPLACE_ESCAPE = tuple()
 
 
 def _zvyraznovac(_, hodnota: str, moznosti: dict[str, str], *__):
@@ -59,13 +59,14 @@ def _zvyraznovac(_, hodnota: str, moznosti: dict[str, str], *__):
 
     return f'<span class="zvyraznovac" style="--farba: {farba};">{hodnota}</span>'
 
-BBCODE_KONVERTOR.add_formatter("z", _zvyraznovac)
+BBKOD_KONVERTOR.add_formatter("z", _zvyraznovac)
+BBKOD_KONVERTOR.add_simple_formatter("uceleny_obsah", '<div class="uceleny-obsah">%(value)s</div>')
 
 
 
 def konvertovat_bbkod(text: str) -> str:
     """
-        Konvertuje text na [BB kód](bbcode.readthedocs.io/en/latest/tags.html).
+        Konvertuje text na [BB kód](https://bbcode.readthedocs.io/en/latest/tags.html).
     """
 
-    return BBCODE_KONVERTOR.format(text)
+    return BBKOD_KONVERTOR.format(text)

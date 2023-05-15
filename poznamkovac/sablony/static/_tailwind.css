@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 
-
 abbr[title] {
   text-underline-offset: 4px;
   text-decoration: underline dotted rgb(123, 123, 123) 1px;
@@ -41,4 +40,15 @@ ol {
 
 ul, ol {
     margin-left: 1rem;
+}
+
+
+@media print {
+    .uceleny-obsah {
+        page-break-inside: avoid;
+    }
+    
+    .toc {
+        display: none;
+    }
 }

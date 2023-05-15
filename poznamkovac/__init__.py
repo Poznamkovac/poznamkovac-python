@@ -16,7 +16,7 @@ VYSTUPNA_CESTA = KORENOVA_CESTA.parent / "site"
 """Výstupná cesta, t. j. kde budú umiestnené konvertované poznámky, HTML a statické súbory."""
 
 
-from poznamkovac.konvertor import vytvorit_poznamky, normalizovat_nadpisy
+from poznamkovac.konvertor import vytvorit_poznamky
 from poznamkovac.sablony import ZAKLAD_POZNAMOK, JINJA_ENV, konvertovat_sablonu
 from poznamkovac.pojmova_mapa import vytvorit_pojmovu_mapu
 
@@ -85,7 +85,7 @@ def konvertovat_vsetky_subory(vystupna_cesta: Path, poznamky_cesta: Path) -> Non
         elif subor.suffix == '.md':
             kategorie = ' - '.join(parent.stem for parent in subor.relative_to(vystupna_cesta / poznamky_cesta.stem).parents)
             markdown_text = konvertovat_sablonu(subor.read_text(encoding='utf-8'), k=nacitat_json_konstanty(poznamky_cesta))
-            poznamky = vytvorit_poznamky(normalizovat_nadpisy(markdown_text),)
+            poznamky = vytvorit_poznamky(markdown_text)
 
 
             obsah = konvertovat_sablonu(ZAKLAD_POZNAMOK.read_text(encoding='utf-8'),
