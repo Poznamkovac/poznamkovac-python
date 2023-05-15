@@ -39,20 +39,26 @@
 
     <!-- Približovanie Mermaid diagramov pomocou D3.js -->
     <script type="text/javascript">
-        setTimeout(() => {
-            var svg_elementy = d3.selectAll(".mermaid svg");
-
-            svg_elementy.each(function () {
-                var svg = d3.select(this);
-                svg.html(`<g>${svg.html()}</g>`);
-                var vnutro = svg.select("g");
-
-                var priblizenie = d3.zoom().on("zoom", (event) => {
-                    vnutro.attr("transform", event.transform);
-                });
-
-                svg.call(priblizenie);
+        var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.addedNodes.length) {
+                    var addedNode = mutation.addedNodes[0];
+        
+                    if (addedNode && addedNode.nodeName === 'svg' && addedNode.parentNode.classList.contains('mermaid')) {
+                        var svg = d3.select(addedNode);
+                        svg.html(`<g>${svg.html()}</g>`);
+                        var vnutro = svg.select("g");
+        
+                        var priblizenie = d3.zoom().on("zoom", (event) => {
+                            vnutro.attr("transform", event.transform);
+                        });
+        
+                        svg.call(priblizenie);
+                    }
+                }
             });
-        }, 1000);
+        });
+        
+        observer.observe(document.body, { childList: true, subtree: true });        
     </script>
 {% endblock skripty %}
