@@ -2,12 +2,17 @@ import shutil
 
 from jinja2 import Environment, FileSystemLoader, DebugUndefined
 from pathlib import Path
+from datetime import datetime
 
 from poznamkovac import SABLONY_CESTA
 
 
 JINJA_ENV = Environment(loader=FileSystemLoader(SABLONY_CESTA), undefined=DebugUndefined)
 ZAKLAD_POZNAMOK = SABLONY_CESTA / '_poznamky.html'
+
+KONTEXTY = {
+    'aktualny_cas': datetime.now()
+}
 
 
 
@@ -38,4 +43,4 @@ def konvertovat_sablonu(text: str, *args, **kwargs) -> str:
 
     sablona = JINJA_ENV.from_string(text)
 
-    return sablona.render(*args, **kwargs)
+    return sablona.render(KONTEXTY, *args, **kwargs)
