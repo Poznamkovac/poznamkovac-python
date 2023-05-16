@@ -28,7 +28,11 @@ def konvertovat_markdown(markdown_text: str) -> str:
         SaneListExtension(),
         SmartyExtension(),
         MetaExtension(),
-        FootnoteExtension(),
+        FootnoteExtension(
+            SUPERSCRIPT_TEXT="*[{}]",
+            PLACE_MARKER="[vysvetlivky]",
+            BACKLINK_TITLE="Naspäť na vysvetlivku č. %d v texte"
+        ),
         SuperFencesCodeExtension(custom_fences=[{
             'name': "mermaid",
             'class': "mermaid",
