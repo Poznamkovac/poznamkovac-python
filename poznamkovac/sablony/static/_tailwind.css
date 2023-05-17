@@ -44,6 +44,11 @@ ul, ol {
 
 
 @media print {
+    abbr[title] {
+        text-decoration: none;
+    }
+
+
     .uceleny-obsah {
         page-break-inside: avoid;
     }
