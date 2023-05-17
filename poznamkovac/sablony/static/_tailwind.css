@@ -62,7 +62,7 @@ ul, ol {
     }
 
 
-    .toc, .footnote-backref {
+    .toc, .footnote-backref, .nie-tlac {
         display: none;
     }
 }

@@ -64,7 +64,9 @@ def _zvyraznovac(_, hodnota: str, moznosti: dict[str, str], *__):
 
 
 BBKOD_KONVERTOR.add_formatter("z", _zvyraznovac)
+
 BBKOD_KONVERTOR.add_simple_formatter("uceleny_obsah", '<div class="uceleny-obsah">%(value)s</div>')
+BBKOD_KONVERTOR.add_simple_formatter("nie_tlac", '<div class="nie-tlac">%(value)s</div>')
 
 
 
