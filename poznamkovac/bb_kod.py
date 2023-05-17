@@ -27,10 +27,11 @@ BBKOD_KONVERTOR = Parser(
     tag_opener=r'{', tag_closer=r'}',
 )
 
-# Z nejakého dôvodu sa aj napriek `escape_html == False`
+# Z nejakého dôvodu sa aj napriek `escape_html == False` a `escape_cosmetic == False`
 # cenzurujú obsahy rôznych tagov, preto manuálne monkey-patchneme
 # `REPLACE_ESCAPE` zoznam znakov z `bbcode.Parser`.
 BBKOD_KONVERTOR.REPLACE_ESCAPE = tuple()
+BBKOD_KONVERTOR.REPLACE_COSMETIC = tuple()
 
 
 def _zvyraznovac(_, hodnota: str, moznosti: dict[str, str], *__):
