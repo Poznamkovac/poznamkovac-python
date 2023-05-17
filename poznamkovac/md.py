@@ -6,7 +6,6 @@ from markdown.extensions.sane_lists import SaneListExtension
 from markdown.extensions.smarty import SmartyExtension
 from markdown.extensions.meta import MetaExtension
 from markdown.extensions.footnotes import FootnoteExtension
-from markdown.extensions.smarty import SmartyExtension
 
 from pymdownx.superfences import SuperFencesCodeExtension, fence_div_format
 
@@ -38,7 +37,6 @@ def konvertovat_markdown(markdown_text: str) -> str:
             'class': "mermaid",
             'format': fence_div_format
         }]),
-        SmartyExtension()
     ], tab_length=2, output_format='html')
 
     return markdown_konvertor.convert(markdown_text)
