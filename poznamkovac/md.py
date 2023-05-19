@@ -48,7 +48,7 @@ def konvertovat_markdown(markdown_text: str) -> str:
         ]),
         InlineHiliteExtension(custom_inline=[
             {
-                'name': "math",
+                'name': "mat",
                 'class': "arithmatex",
                 'format': arithmatex_inline_format(which="generic")
             }
