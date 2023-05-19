@@ -13,14 +13,14 @@
 
     <!-- vis-network -->
     <link rel="stylesheet" href="https://unpkg.com/vis-network@9/dist/dist/vis-network.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://unpkg.com/vis-network@9/dist/vis-network.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript" src="https://unpkg.com/vis-network@9/dist/vis-network.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <!-- Tooltipy -->
-    <script src="https://unpkg.com/@popperjs/core@2" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://unpkg.com/tippy.js@6" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript" src="https://unpkg.com/@popperjs/core@2" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript" src="https://unpkg.com/tippy.js@6" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <!-- Načítanie pojmovej mapy -->
-    <script src="/static/pojmova_mapa.js"></script>
+    <script type="text/javascript" src="/static/pojmova_mapa.js"></script>
     <script type="text/javascript">
         const DATA = {{ pojmova_mapa|safe }}; // eslint-disable-line
         vytvoritPojmovuMapu(DATA);
@@ -28,7 +28,7 @@
 
 
     <!-- Načítanie D3.js a Mermaid -->
-    <script src="https://unpkg.com/d3@7"></script>
+    <script type="text/javascript" src="https://unpkg.com/d3@7"></script>
     <script type="module">
         import mermaid from "https://unpkg.com/mermaid@10/dist/mermaid.esm.min.mjs";
         mermaid.initialize({ startOnLoad: true, theme: "neutral", logLevel: 'debug' });
@@ -60,5 +60,23 @@
         });
         
         observer.observe(document.body, { childList: true, subtree: true });        
+    </script>
+
+    <!-- MathJax -->
+    <script type="text/javascript" src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script type="text/javascript">
+        window.MathJax = {
+            tex: {
+              inlineMath: [ ["\\(","\\)"] ],
+              displayMath: [ ["\\[","\\]"] ],
+              processEscapes: true,
+              processEnvironments: true
+            },
+            options: {
+              ignoreHtmlClass: ".*",
+              processHtmlClass: "arithmatex"
+            }
+          };
+          
     </script>
 {% endblock skripty %}

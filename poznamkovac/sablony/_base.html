@@ -26,14 +26,7 @@
                 link.crossOrigin = "anonymous";
                 link.referrerPolicy = "no-refferer";
 
-                if (tmavyRezim) {
-                    link.integrity = "sha512-Mo2QuokS9Y0JOuzVLUh3o9A07RqSXcpc2KC9LXxOwfaBgPt8ZHRiDfGQ2+tZw7xIno+ViWipTNLg1StC6TmwMA==";
-                    link.href = "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-dark.min.css";
-                } else {
-                    link.integrity = "sha512-bm684OXnsiNuQSyrxuuwo4PHqr3OzxPpXyhT66DA/fhl73e1JmBxRKGnO/nRwWvOZxJLRCmNH7FII+Yn1JNPmg==";
-                    link.href = "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-light.min.css";
-                }
-
+                link.href = `https://unpkg.com/github-markdown-css@latest/github-markdown-${tmavyRezim ? 'dark' : 'light'}.css`;
                 document.head.appendChild(link);
             };
 

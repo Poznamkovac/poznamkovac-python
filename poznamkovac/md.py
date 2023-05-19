@@ -7,7 +7,9 @@ from markdown.extensions.smarty import SmartyExtension
 from markdown.extensions.meta import MetaExtension
 from markdown.extensions.footnotes import FootnoteExtension
 
+from pymdownx.arithmatex import arithmatex_fenced_format, arithmatex_inline_format
 from pymdownx.superfences import SuperFencesCodeExtension, fence_div_format
+from pymdownx.inlinehilite import InlineHiliteExtension
 
 
 OBSAH = '[obsah]'
@@ -32,11 +34,25 @@ def konvertovat_markdown(markdown_text: str) -> str:
             PLACE_MARKER="[vysvetlivky]",
             BACKLINK_TITLE="Naspäť na vysvetlivku č. %d v texte"
         ),
-        SuperFencesCodeExtension(custom_fences=[{
-            'name': "mermaid",
-            'class': "mermaid",
-            'format': fence_div_format
-        }]),
+        SuperFencesCodeExtension(custom_fences=[
+            {
+                'name': "mermaid",
+                'class': "mermaid",
+                'format': fence_div_format
+            },
+            {
+                'name': "mat",
+                'class': "arithmatex",
+                'format': arithmatex_fenced_format(which="generic")
+            }
+        ]),
+        InlineHiliteExtension(custom_inline=[
+            {
+                'name': "math",
+                'class': "arithmatex",
+                'format': arithmatex_inline_format(which="generic")
+            }
+        ])
     ], tab_length=2, output_format='html')
 
     return markdown_konvertor.convert(markdown_text)
