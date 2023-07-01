@@ -63,4 +63,4 @@ Môžete taktiež tento projekt [sponzorovať cez GitHub](https://github.com/spo
 
 ## Licencia
 
-Táto aplikácia je poskytovaná pod licenciou MIT. Viac informácií nájdete v súbore `LICENSE`.
+Táto aplikácia je poskytovaná pod licenciou GNU. Viac informácií nájdete v súbore `COPYING`.
