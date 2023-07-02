@@ -85,13 +85,14 @@ def konvertovat_vsetky_subory(vystupna_cesta: Path, poznamky_cesta: Path) -> Non
         elif subor.suffix == '.md':
             kategorie = ' - '.join(parent.stem for parent in subor.relative_to(vystupna_cesta / poznamky_cesta.stem).parents)
             markdown_text = konvertovat_sablonu(subor.read_text(encoding='utf-8'), k=nacitat_json_konstanty(poznamky_cesta))
-            poznamky = vytvorit_poznamky(markdown_text)
+            poznamky, metadata = vytvorit_poznamky(markdown_text)
 
 
             obsah = konvertovat_sablonu(ZAKLAD_POZNAMOK.read_text(encoding='utf-8'),
                 title=f"{kategorie} {subor.stem}",
                 poznamky=poznamky,
-                pojmova_mapa=json.dumps(vytvorit_pojmovu_mapu(markdown_text))
+                metadata=metadata,
+                pojmova_mapa=json.dumps(vytvorit_pojmovu_mapu(markdown_text)) if metadata.get("mapa", ["áno"])[0].lower() != "nie" else None
             )
 
 

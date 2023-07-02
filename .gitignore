@@ -6,4 +6,4 @@ node_modules/
 **/static/compiled*.css
 
 site/
-**/_/
+poznamky/**/.*.md

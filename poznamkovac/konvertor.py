@@ -86,7 +86,7 @@ def pridat_novu_stranu(obsah: str) -> str:
 
 
 
-def vytvorit_poznamky(markdown_text: str, normalizovat: bool=True) -> str:
+def vytvorit_poznamky(markdown_text: str, normalizovat: bool=True) -> tuple[str, dict[str, list[str]]]:
     """
         Vytvorí HTML z BBCode/Markdown textu poznámok.
 
@@ -98,11 +98,11 @@ def vytvorit_poznamky(markdown_text: str, normalizovat: bool=True) -> str:
 
     markdown_text = normalizovat_nadpisy(markdown_text) if normalizovat else markdown_text
 
-    html = konvertovat_markdown(markdown_text)
+    html, metadata = konvertovat_markdown(markdown_text)
     html = konvertovat_bbkod(html)
     html = pridat_novu_stranu(html)
 
-    return html
+    return html, metadata
 
 
 

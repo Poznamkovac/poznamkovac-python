@@ -17,7 +17,7 @@ OBSAH = '[obsah]'
 
 
 
-def konvertovat_markdown(markdown_text: str) -> str:
+def konvertovat_markdown(markdown_text: str) -> tuple[str, dict[str, list[str]]]:
     """
         Konvertuje Markdown na HTML.
     """
@@ -55,4 +55,4 @@ def konvertovat_markdown(markdown_text: str) -> str:
         ])
     ], tab_length=2, output_format='html')
 
-    return markdown_konvertor.convert(markdown_text)
+    return markdown_konvertor.convert(markdown_text), getattr(markdown_konvertor, "Meta", {})
