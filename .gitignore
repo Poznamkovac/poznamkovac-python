@@ -3,7 +3,7 @@ __pycache__/
 .venv/
 node_modules/
 
-**/static/compiled*.css
+**/staticke/styly*.css
 
 site/
 poznamky/**/.*.md

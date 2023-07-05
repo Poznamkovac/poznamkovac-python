@@ -1,6 +1,6 @@
 {% extends "_base.html" %}
 
-{% block content %}
+{% block obsah %}
     {% if pojmova_mapa %}
         <div id="pojmova_mapa" class="print:hidden" style="height: 65vh;"></div>
     {% endif %}
@@ -8,7 +8,7 @@
     <article class="p-4 markdown-body md:p-8" style="background-color: transparent;">
         {{ poznamky|safe }}
     </article>
-{% endblock content %}
+{% endblock obsah %}
 
 {% block skripty %}
     {{ super() }}
@@ -24,7 +24,7 @@
     
     {% if pojmova_mapa %}
         <!-- Načítanie pojmovej mapy -->
-        <script type="text/javascript" src="/static/pojmova_mapa.js"></script>
+        <script type="text/javascript" src="/staticke/pojmova_mapa.js"></script>
         <script type="text/javascript">
             const DATA = {{ pojmova_mapa|safe }}; // eslint-disable-line
             vytvoritPojmovuMapu(DATA);

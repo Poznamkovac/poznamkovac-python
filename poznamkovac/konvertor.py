@@ -20,22 +20,20 @@ def normalizovat_nadpisy(markdown_text: str) -> str:
         ich normalizuje (odstraňuje prebytočné mriežky, atď...).
     """
 
-    dozadu = 1
-    """
-        Ak obsah nadpisu (text do ďalšieho nadpisu) obsahuje `\n`,
-        tak potom tento nadpis nemožno prevodiť na položku zoznamu.
-
-        Nasledujúce položky sa preto posunú o `minus` levelov dozadu,
-        aby sa zachovalo formátovanie zoznamu.
-    """
-
     prva_polozka = True
     """Prvá položka v zozname bude mať dodatočný `\n` prefix, pre zachovanie formátovania"""
 
 
     def nahradit_nadpisy(vysledok: re.Match[str]) -> str:
-        nonlocal dozadu
         nonlocal prva_polozka
+        dozadu = 1
+        """
+            Ak obsah nadpisu (text do ďalšieho nadpisu) obsahuje `\n`,
+            tak potom tento nadpis nemožno prevodiť na položku zoznamu.
+
+            Nasledujúce položky sa preto posunú o `minus` levelov dozadu,
+            aby sa zachovalo formátovanie zoznamu.
+        """
 
         list_level, titulok, obsah = len(vysledok.group(1)), vysledok.group(2).strip(), vysledok.group(3).strip()
 

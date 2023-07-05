@@ -72,19 +72,19 @@ def konvertovat_vsetky_subory(vystupna_cesta: Path, poznamky_cesta: Path) -> Non
     """
         Hlavná funkcia - konvertuje všetky súbory poznámok a Jinja šablón vo výstupnej ceste (`VYSTUPNA_CESTA`).
 
-        Tým pádom je najskôr rozumné prekopírovať všetky potrebné súbory do `VYSTUPNA_CESTA`.
-        To sa obyčajne deje v `poznamkovac.__main__.main` prostrednictvom `poznamkovac.sablony.kopirovat_sablony_a_poznamky`
+        Najskôr je potrebné prekopírovať všetky súbory do `VYSTUPNA_CESTA`.
+        To sa zvyčajne deje v `poznamkovac.__main__:main` prostredníctvom `poznamkovac.sablony:kopirovat_sablony_a_poznamky`
     """
 
+    konstanty = nacitat_json_konstanty(poznamky_cesta)
+    zoznam_poznamok: dict[str, dict[str, str]] = dict()
+
+
     for subor in vystupna_cesta.rglob("*.*"):
-        if subor.stem.startswith('_'):
-            subor.unlink()
-            continue
-
-
-        elif subor.suffix == '.md':
+        if subor.suffix == '.md':
+            # Markdown
             kategorie = ' - '.join(parent.stem for parent in subor.relative_to(vystupna_cesta / poznamky_cesta.stem).parents)
-            markdown_text = konvertovat_sablonu(subor.read_text(encoding='utf-8'), k=nacitat_json_konstanty(poznamky_cesta))
+            markdown_text = konvertovat_sablonu(subor.read_text(encoding='utf-8'), k=konstanty)
             poznamky, metadata = vytvorit_poznamky(markdown_text)
 
 
@@ -100,7 +100,33 @@ def konvertovat_vsetky_subory(vystupna_cesta: Path, poznamky_cesta: Path) -> Non
             subor.unlink()
 
 
-        elif subor.suffix == '.html':
-            sablona = JINJA_ENV.from_string(subor.read_text(encoding='utf-8'))
-            subor.write_text(sablona.render(), encoding='utf-8')
+        else:
+            if subor.stem.startswith('_'):
+                continue
 
+            # Ostatné súbory
+            obsah = subor.read_text(encoding='utf-8')
+
+            subor.write_text(konvertovat_sablonu(obsah), encoding='utf-8')
+            continue
+
+
+        # Vytvoriť zoznam poznámok z metadát:
+        kategoria = metadata.get("kategoria", [subor.parent.stem])[0]
+        zoznam_poznamok[kategoria] = {
+            "nazov": metadata.get("nazov", [subor.stem])[0],
+            "autori": metadata.get("autori", []),
+            "popis": metadata.get("popis", [None])[0]
+        }
+
+
+    # Vykresliť zoznam pozámok:
+    obsah = (vystupna_cesta / '_zoznam.html').read_text(encoding='utf-8')
+    (vystupna_cesta / 'poznamky.html').write_text(konvertovat_sablonu(obsah, zoznam=zoznam_poznamok), encoding='utf-8')
+
+
+    # Vyčistiť súbory, ktorých mená začínajú s podtržníkom:
+    for subor in vystupna_cesta.rglob("*.*"):
+        if subor.stem.startswith('_'):
+            subor.unlink()
+            continue
