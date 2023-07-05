@@ -38,7 +38,7 @@ jobs:
       - name: Zkompilovať Tailwind
         run: |
           cd ./tailwind
-          npm ci
+          npm i
           bash kompilovat.sh
 
       - name: Konvertovať šablóny a poznámky
