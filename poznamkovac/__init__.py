@@ -65,7 +65,7 @@ def konvertovat_vsetky_subory(vystupna_cesta: Path, poznamky_cesta: Path) -> Non
                     "nazov": subor.stem,
                     "popis": metadata.get("popis", [None])[0],
                     "autori": metadata.get("autori", []),
-                    "root_cesta": subor.parent
+                    "href": f"/{subor.relative_to(vystupna_cesta).as_posix()}"
                 })
 
 
@@ -86,6 +86,7 @@ def konvertovat_vsetky_subory(vystupna_cesta: Path, poznamky_cesta: Path) -> Non
                     "nazov": subor.stem,
                     "popis": None,
                     "autori": [],
+                    "href": f"/{subor.relative_to(vystupna_cesta).as_posix()}"
                 })
 
 
