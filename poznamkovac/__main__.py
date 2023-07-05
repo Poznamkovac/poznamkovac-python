@@ -12,14 +12,13 @@ def main() -> None:
     """
 
     # Ak už existuje `VYSTUPNA_CESTA`, vytvoríme ju nanovo
-    # ...kvázi ju "prepíšeme".
+    # ...akoby ju "prepíšeme":
     if VYSTUPNA_CESTA.exists():
         shutil.rmtree(VYSTUPNA_CESTA)
 
     kopirovat_sablony_a_poznamky(SABLONY_CESTA, POZNAMKY_CESTA, VYSTUPNA_CESTA)
     konvertovat_vsetky_subory(VYSTUPNA_CESTA, POZNAMKY_CESTA)
 
-    # Toto chceme vidieť:
     print(f"HTML výstup bol vygenerovaný v `{VYSTUPNA_CESTA}` 👀")
 
 

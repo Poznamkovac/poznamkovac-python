@@ -1,6 +1,7 @@
+import typing as t
+
 import json
 
-from jsonmerge import merge
 from pathlib import Path
 
 
@@ -12,59 +13,14 @@ SABLONY_CESTA = KORENOVA_CESTA / "sablony"
 
 POZNAMKY_CESTA = KORENOVA_CESTA.parent / "poznamky"
 """Cesta k priečinku s poznámkami"""
+
 VYSTUPNA_CESTA = KORENOVA_CESTA.parent / "site"
 """Výstupná cesta, t. j. kde budú umiestnené konvertované poznámky, HTML a statické súbory."""
 
 
-from poznamkovac.konvertor import vytvorit_poznamky
-from poznamkovac.sablony import ZAKLAD_POZNAMOK, JINJA_ENV, konvertovat_sablonu
+from poznamkovac.konvertor import nacitat_json_konstanty, vytvorit_poznamky
+from poznamkovac.sablony import ZAKLAD_POZNAMOK, konvertovat_sablonu
 from poznamkovac.pojmova_mapa import vytvorit_pojmovu_mapu
-
-
-
-def nacitat_json_konstanty(poznamky_cesta: Path) -> dict:
-    """
-        Načíta všetky JSON kontexty pre Jinju.
-
-        Kontexty sa načítavajú z akéhokoľvek `.json` súboru, ktorý je prítomný v priečinku poznámok (`POZNAMKY_CESTA`).
-        Tieto kontexy budú globálne prítomné v Jinja šablónach, prostredníctvom premennej `k`.
-
-        Napr.:
-
-        `poznamky/abc/autori.json`:
-
-        ```json
-        {
-            "sjl": {
-                "autori": {
-                    "JGT": "**Jozef Gregor Tajovský** - vedúca osobnosť druhej vlny slovenského literárneho realizmu (*kritického realizmu; prvou bol opisný realizmus*).",
-                    "MK": "**Martin Kukučín** - vlastným menom *MUDr. Matej Bencúr*, bol slovenský lekár, známejší ako prozaik, dramatik a publicista. Bol **najvýznamnejším predstaviteľom slovenského literárneho realizmu** (*1. vlny - opisného realizmu*), je zakladateľom modernej slovenskej prózy.",
-                    "BST": "**Božena Slančíková-Timrava** - predstaviteľka druhej vlny slovenskej realistickej literatúry (kritický realizmus).",
-                    "HG": "**Hugolín Gavlovič** - predstaviteľ slovenskej barokovej literatúry"
-                }
-            }
-        }
-        ```
-
-        ...tak potom bude hociktorá hodnota daného kľúča prístupná v Markdown súbore poznámok takto:
-
-        ```
-        # Literárni autori
-
-        {% for inicialky, autor in k.sjl.autori.items() %}
-        - {{ autor }}
-        {% endfor %}
-        ```
-    """
-
-    konstanty = {}
-
-    for json_subor in poznamky_cesta.rglob("*.json"):
-        with json_subor.open("r", encoding="utf-8") as s:
-            subor_konstanty = json.load(s)
-            konstanty = merge(konstanty, subor_konstanty)
-
-    return konstanty
 
 
 
@@ -77,19 +33,19 @@ def konvertovat_vsetky_subory(vystupna_cesta: Path, poznamky_cesta: Path) -> Non
     """
 
     konstanty = nacitat_json_konstanty(poznamky_cesta)
-    zoznam_poznamok: dict[str, dict[str, str]] = dict()
+    zoznam_poznamok: dict[str, dict[str, t.Any]] = dict()
 
 
     for subor in vystupna_cesta.rglob("*.*"):
         if subor.suffix == '.md':
             # Markdown
-            kategorie = ' - '.join(parent.stem for parent in subor.relative_to(vystupna_cesta / poznamky_cesta.stem).parents)
+            kategorie = ' - '.join(parent.stem for parent in subor.relative_to(vystupna_cesta).parents)
             markdown_text = konvertovat_sablonu(subor.read_text(encoding='utf-8'), k=konstanty)
             poznamky, metadata = vytvorit_poznamky(markdown_text)
 
 
             obsah = konvertovat_sablonu(ZAKLAD_POZNAMOK.read_text(encoding='utf-8'),
-                title=f"{kategorie} {subor.stem}",
+                titulok=f"{kategorie} {subor.stem}",
                 poznamky=poznamky,
                 metadata=metadata,
                 pojmova_mapa=json.dumps(vytvorit_pojmovu_mapu(markdown_text)) if metadata.get("mapa", ["áno"])[0].lower() != "nie" else None
@@ -122,7 +78,7 @@ def konvertovat_vsetky_subory(vystupna_cesta: Path, poznamky_cesta: Path) -> Non
 
     # Vykresliť zoznam pozámok:
     obsah = (vystupna_cesta / '_zoznam.html').read_text(encoding='utf-8')
-    (vystupna_cesta / 'poznamky.html').write_text(konvertovat_sablonu(obsah, zoznam=zoznam_poznamok), encoding='utf-8')
+    (vystupna_cesta / 'index.html').write_text(konvertovat_sablonu(obsah, zoznam=zoznam_poznamok), encoding='utf-8')
 
 
     # Vyčistiť súbory, ktorých mená začínajú s podtržníkom:

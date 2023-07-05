@@ -1,6 +1,10 @@
 import typing as t
 
 import re
+import json
+
+from pathlib import Path
+from jsonmerge import merge
 
 from poznamkovac.bb_kod import konvertovat_bbkod
 from poznamkovac.md import konvertovat_markdown
@@ -101,3 +105,49 @@ def vytvorit_poznamky(markdown_text: str, normalizovat: bool=True) -> tuple[str,
     html = pridat_novu_stranu(html)
 
     return html, metadata
+
+
+
+def nacitat_json_konstanty(poznamky_cesta: Path) -> dict:
+    """
+        Načíta všetky JSON kontexty pre Jinju.
+
+        Kontexty sa načítavajú z akéhokoľvek `.json` súboru, ktorý je prítomný v priečinku poznámok (`POZNAMKY_CESTA`).
+        Tieto kontexy budú globálne prítomné v Jinja šablónach, prostredníctvom premennej `k`.
+
+        Napr.:
+
+        `poznamky/abc/autori.json`:
+
+        ```json
+        {
+            "sjl": {
+                "autori": {
+                    "JGT": "**Jozef Gregor Tajovský** - vedúca osobnosť druhej vlny slovenského literárneho realizmu (*kritického realizmu; prvou bol opisný realizmus*).",
+                    "MK": "**Martin Kukučín** - vlastným menom *MUDr. Matej Bencúr*, bol slovenský lekár, známejší ako prozaik, dramatik a publicista. Bol **najvýznamnejším predstaviteľom slovenského literárneho realizmu** (*1. vlny - opisného realizmu*), je zakladateľom modernej slovenskej prózy.",
+                    "BST": "**Božena Slančíková-Timrava** - predstaviteľka druhej vlny slovenskej realistickej literatúry (kritický realizmus).",
+                    "HG": "**Hugolín Gavlovič** - predstaviteľ slovenskej barokovej literatúry"
+                }
+            }
+        }
+        ```
+
+        ...tak potom bude hociktorá hodnota daného kľúča prístupná v Markdown súbore poznámok takto:
+
+        ```
+        # Literárni autori
+
+        {% for inicialky, autor in k.sjl.autori.items() %}
+        - {{ autor }}
+        {% endfor %}
+        ```
+    """
+
+    konstanty = {}
+
+    for json_subor in poznamky_cesta.rglob("*.json"):
+        with json_subor.open("r", encoding="utf-8") as s:
+            subor_konstanty = json.load(s)
+            konstanty = merge(konstanty, subor_konstanty)
+
+    return konstanty
