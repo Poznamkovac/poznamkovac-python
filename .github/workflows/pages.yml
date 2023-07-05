@@ -37,16 +37,16 @@ jobs:
           cache-dependency-path: 'tailwind/package-lock.json'
 
 
-      - name: Konvertovať šablóny a poznámky
-        run: |
-          pip install -r requirements.txt
-          python3 -m poznamkovac
-
       - name: Zkompilovať Tailwind
         run: |
           cd ./tailwind
           npm ci
           bash kompilovat.sh
+
+      - name: Konvertovať šablóny a poznámky
+        run: |
+          pip install -r requirements.txt
+          python3 -m poznamkovac
 
 
       - name: Nahrať artefakt stránky

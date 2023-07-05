@@ -103,19 +103,3 @@ def vytvorit_poznamky(markdown_text: str, normalizovat: bool=True) -> tuple[str,
     html = pridat_novu_stranu(html)
 
     return html, metadata
-
-
-
-def najst_nadpisy(markdown_text: str) -> t.Generator[IterNadpis, None, None]:
-    """
-        Generátor obsahu nadpisov
-    """
-
-    vysledky = OBSAH_REGEX.finditer(markdown_text)
-    """Všetky zhody regulárneho výrazu pre obsahy nadpisov a nadpisy v texte"""
-
-
-    for vysledok in vysledky:
-        level, titulok, obsah = len(vysledok.group(1)), vysledok.group(2).strip(), vysledok.group(3).strip()
-
-        yield IterNadpis(level=level, titulok=titulok, obsah=obsah)

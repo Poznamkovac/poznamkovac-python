@@ -3,7 +3,7 @@ import typing as t
 import re
 import hashlib
 
-from poznamkovac.konvertor import vytvorit_poznamky, najst_nadpisy
+from poznamkovac.konvertor import vytvorit_poznamky, IterNadpis, OBSAH_REGEX
 
 
 Nadpis = t.TypedDict("Nadpis", {
@@ -26,6 +26,22 @@ PM_PRESKOCIT_OBSAH = tuple()
 
 PM_PRESKOCIT_NADPISY = ("Zdroje",)
 """Tieto nadpisy nebudú zahrnuté v JSON pojmovej mapy"""
+
+
+
+def najst_nadpisy(markdown_text: str) -> t.Generator[IterNadpis, None, None]:
+    """
+        Generátor obsahu nadpisov
+    """
+
+    vysledky = OBSAH_REGEX.finditer(markdown_text)
+    """Všetky zhody regulárneho výrazu pre obsahy nadpisov a nadpisy v texte"""
+
+
+    for vysledok in vysledky:
+        level, titulok, obsah = len(vysledok.group(1)), vysledok.group(2).strip(), vysledok.group(3).strip()
+
+        yield IterNadpis(level=level, titulok=titulok, obsah=obsah)
 
 
 

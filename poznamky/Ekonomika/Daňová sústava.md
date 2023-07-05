@@ -1,5 +1,3 @@
-<!-- markdownlint-disable MD033 -->
-
 # Daňová sústava
 
 [obsah]
