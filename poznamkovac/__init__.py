@@ -33,56 +33,65 @@ def konvertovat_vsetky_subory(vystupna_cesta: Path, poznamky_cesta: Path) -> Non
     """
 
     konstanty = nacitat_json_konstanty(poznamky_cesta)
-    zoznam_poznamok: dict[str, dict[str, t.Any]] = dict()
+
+    zoznam_sablona = (vystupna_cesta / '_zoznam.html').read_text(encoding='utf-8')
+    poznamky_zaklad_sablona = ZAKLAD_POZNAMOK.read_text(encoding='utf-8')
 
 
-    for subor in vystupna_cesta.rglob("*.*"):
-        if subor.suffix == '.md':
-            # Markdown
-            kategorie = ' - '.join(parent.stem for parent in subor.relative_to(vystupna_cesta).parents)
-            markdown_text = konvertovat_sablonu(subor.read_text(encoding='utf-8'), k=konstanty)
-            poznamky, metadata = vytvorit_poznamky(markdown_text)
+    for priecinok in vystupna_cesta.glob("**/"):
+        if priecinok.stem == 'staticke':
+            continue
+
+        zoznam_poznamok: list[dict[str, t.Any]] = []
+
+        for subor in priecinok.glob("*.*"):
+            kategorie = [parent.stem for parent in subor.relative_to(vystupna_cesta).parents]
+
+            if subor.suffix == '.md':
+                # Markdown
+                markdown_text = konvertovat_sablonu(subor.read_text(encoding='utf-8'), k=konstanty)
+                poznamky, metadata = vytvorit_poznamky(markdown_text)
 
 
-            obsah = konvertovat_sablonu(ZAKLAD_POZNAMOK.read_text(encoding='utf-8'),
-                titulok=f"{kategorie} {subor.stem}",
-                poznamky=poznamky,
-                metadata=metadata,
-                pojmova_mapa=json.dumps(vytvorit_pojmovu_mapu(markdown_text)) if metadata.get("mapa", ["áno"])[0].lower() != "nie" else None
-            )
+                obsah = konvertovat_sablonu(poznamky_zaklad_sablona,
+                    titulok=f"{' - '.join(kategorie)} {subor.stem}",
+                    poznamky=poznamky,
+                    metadata=metadata,
+                    pojmova_mapa=json.dumps(vytvorit_pojmovu_mapu(markdown_text)) if metadata.get("mapa", ["áno"])[0].lower() != "nie" else None
+                )
 
 
-            subor.with_suffix('.html').write_text(obsah, encoding='utf-8')
-            subor.unlink()
+                zoznam_poznamok.append({
+                    "nazov": subor.stem,
+                    "popis": metadata.get("popis", [None])[0],
+                    "autori": metadata.get("autori", []),
+                    "root_cesta": subor.parent
+                })
 
 
-        else:
-            if subor.stem.startswith('_'):
+                subor.with_suffix('.html').write_text(obsah, encoding='utf-8')
+                subor.unlink()
+
+
+            else:
+                if subor.stem.startswith('_'):
+                    subor.unlink()
+                    continue
+
+
+                # Ostatné súbory
+                obsah = subor.read_text(encoding='utf-8')
+
+                zoznam_poznamok.append({
+                    "nazov": subor.stem,
+                    "popis": None,
+                    "autori": [],
+                })
+
+
+                subor.write_text(konvertovat_sablonu(obsah), encoding='utf-8')
                 continue
 
-            # Ostatné súbory
-            obsah = subor.read_text(encoding='utf-8')
 
-            subor.write_text(konvertovat_sablonu(obsah), encoding='utf-8')
-            continue
-
-
-        # Vytvoriť zoznam poznámok z metadát:
-        kategoria = metadata.get("kategoria", [subor.parent.stem])[0]
-        zoznam_poznamok[kategoria] = {
-            "nazov": metadata.get("nazov", [subor.stem])[0],
-            "autori": metadata.get("autori", []),
-            "popis": metadata.get("popis", [None])[0]
-        }
-
-
-    # Vykresliť zoznam pozámok:
-    obsah = (vystupna_cesta / '_zoznam.html').read_text(encoding='utf-8')
-    (vystupna_cesta / 'index.html').write_text(konvertovat_sablonu(obsah, zoznam=zoznam_poznamok), encoding='utf-8')
-
-
-    # Vyčistiť súbory, ktorých mená začínajú s podtržníkom:
-    for subor in vystupna_cesta.rglob("*.*"):
-        if subor.stem.startswith('_'):
-            subor.unlink()
-            continue
+        # Vytvoriť zoznam poznámok
+        (priecinok / 'index.html').write_text(konvertovat_sablonu(zoznam_sablona, zoznam=zoznam_poznamok), encoding='utf-8')
