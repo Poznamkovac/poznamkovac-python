@@ -2,8 +2,6 @@
 
 {% block obsah %}
     {% for kategoria, data in zoznam.items() %}
-        {% if kategoria|start %}
-
         {{ data["nazov"] }} {% if data["popis"] is not none %}({{ data.popis }}){% endif %}
 
         {% if data["autori"] %}
