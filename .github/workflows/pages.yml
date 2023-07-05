@@ -33,14 +33,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-          cache: 'npm'
-          cache-dependency-path: 'tailwind/package-lock.json'
 
 
       - name: Zkompilovať Tailwind
         run: |
           cd ./tailwind
-          npm ci
+          npm i
           bash kompilovat.sh
 
       - name: Konvertovať šablóny a poznámky
