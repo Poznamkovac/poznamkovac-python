@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import shutil
 
-from poznamkovac import VYSTUPNA_CESTA, SABLONY_CESTA, POZNAMKY_CESTA, konvertovat_vsetky_subory
+from poznamkovac import VYSTUPNA_CESTA, SABLONY_CESTA, POZNAMKY_CESTA, konvertovat_vsetky_poznamky
 from poznamkovac.sablony import kopirovat_sablony_a_poznamky
 
 
@@ -17,7 +17,7 @@ def main() -> None:
         shutil.rmtree(VYSTUPNA_CESTA)
 
     kopirovat_sablony_a_poznamky(SABLONY_CESTA, POZNAMKY_CESTA, VYSTUPNA_CESTA)
-    konvertovat_vsetky_subory(VYSTUPNA_CESTA, POZNAMKY_CESTA)
+    konvertovat_vsetky_poznamky(VYSTUPNA_CESTA)
 
     print(f"HTML výstup bol vygenerovaný v `{VYSTUPNA_CESTA}` 👀")
 

@@ -2,22 +2,34 @@
 
 {% block obsah %}
     <div class="p-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 place-items-center">
-        {% for data in zoznam %}
-            <a href="{{ data['href'] }}" class="rounded overflow-hidden shadow-lg p-4 bg-white dark:bg-gray-700">
-                <div class="font-bold text-xl mb-1 text-indigo-600 dark:text-indigo-400">{{ data["nazov"] }}</div>
-
-                {% if data["autori"] %}
-                    <p class="text-gray-700 text-base dark:text-gray-200 mb-1">
-                        <div class="flex flex-row gap-4"><b>Autori:</b> <i>{{ data["autori"]|join(', ') }}</i></div>
-                    </p>
-                {% endif %}
-                
-                {% if data["popis"] is not none %}
-                    <div class="text-gray-700 text-base mt-2 dark:text-gray-200">
-                        {{ data["popis"] }}
-                    </div>
-                {% endif %}
-                </a>
+        {% for zoznam_dict in zoznam_poznamok %}
+            {% for kategorie, zoznam in zoznam_dict.items() %}
+                <div class="card bg-white rounded shadow-lg p-6 mb-6">
+                    {% if kategorie != ('_',) %}
+                        <div class="font-semibold text-lg mb-4">Kategórie: {{ ', '.join(kategorie) }}</div>
+                    {% else %}
+                        {% for poznamky in zoznam %}
+                            <div class="card bg-gray-100 rounded shadow-lg p-4 mb-4">
+                                <a href="{{ poznamky['href'] }}">
+                                    <div class="font-bold text-xl mb-1 text-indigo-600 dark:text-indigo-400">{{ poznamky["nazov"] }}</div>
+                                    
+                                    {% if poznamky["autori"] %}
+                                        <p class="text-gray-700 text-base dark:text-gray-200 mb-1">
+                                            <div class="flex flex-row gap-4"><b>Autori:</b> <i>{{ poznamky["autori"]|join(', ') }}</i></div>
+                                        </p>
+                                    {% endif %}
+                                    
+                                    {% if poznamky["popis"] is not none %}
+                                        <div class="text-gray-700 text-base mt-2 dark:text-gray-200">
+                                            {{ poznamky["popis"] }}
+                                        </div>
+                                    {% endif %}
+                                </a>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %}
         {% endfor %}
     </div>
 {% endblock obsah %}
