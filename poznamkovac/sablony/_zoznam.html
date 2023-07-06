@@ -1,35 +1,37 @@
 {% extends "_base.html" %}
 
-{% block obsah %}
-    <div class="p-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 place-items-center">
-        {% for zoznam_dict in zoznam_poznamok %}
-            {% for kategorie, zoznam in zoznam_dict.items() %}
-                <div class="card bg-white rounded shadow-lg p-6 mb-6">
-                    {% if kategorie != ('_',) %}
-                        <div class="font-semibold text-lg mb-4">Kategórie: {{ ', '.join(kategorie) }}</div>
-                    {% else %}
-                        {% for poznamky in zoznam %}
-                            <div class="card bg-gray-100 rounded shadow-lg p-4 mb-4">
-                                <a href="{{ poznamky['href'] }}">
-                                    <div class="font-bold text-xl mb-1 text-indigo-600 dark:text-indigo-400">{{ poznamky["nazov"] }}</div>
-                                    
-                                    {% if poznamky["autori"] %}
-                                        <p class="text-gray-700 text-base dark:text-gray-200 mb-1">
-                                            <div class="flex flex-row gap-4"><b>Autori:</b> <i>{{ poznamky["autori"]|join(', ') }}</i></div>
-                                        </p>
-                                    {% endif %}
-                                    
-                                    {% if poznamky["popis"] is not none %}
-                                        <div class="text-gray-700 text-base mt-2 dark:text-gray-200">
-                                            {{ poznamky["popis"] }}
-                                        </div>
-                                    {% endif %}
-                                </a>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
+{% macro vytvorit_zoznam(zoznam_poznamok, druha_kategoria=false) %}
+    <div class="my-2 p-3 {{ 'bg-white dark:bg-gray-900' if druha_kategoria else 'bg-gray-200 dark:bg-gray-800' }} rounded shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+        {% if zoznam_poznamok["kategoria"] is not none %}
+            <h2 class="font-bold text-xl dark:text-gray-200 mb-4"><a href="{{ zoznam_poznamok['href'] }}" class="text-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400">{{ zoznam_poznamok["kategoria"] }}:</a></h2>
+        {% endif %}
+
+        <div class="space-y-2">
+            {% for poznamka in zoznam_poznamok["poznamky"] %}
+            <a href="{{ poznamka['href'] }}" class="flex flex-col py-1 px-3 bg-gray-100 dark:bg-gray-700 rounded transition-colors hover:bg-gray-200 dark:hover:bg-gray-600">
+                <span class="font-medium text-base dark:text-gray-300">{{ poznamka['nazov'] }}</span>
+
+                {% if poznamka['popis'] is not none %}
+                    <span class="text-gray-600 dark:text-gray-400 text-sm">{{ poznamka['popis'] }}</span>
+                {% endif %}
+
+                {% if poznamka['autori'] %}
+                    <div>
+                        <span class="text-gray-500 dark:text-gray-500 text-sm">Autori: {{ ', '.join(poznamka['autori']) }}</span>
+                    </div>
+                {% endif %}
+            </a>
             {% endfor %}
-        {% endfor %}
+
+            {% if zoznam_poznamok["podkategorie"] %}
+                {{ vytvorit_zoznam(zoznam_poznamok["podkategorie"], not druha_kategoria) }}
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+{% block obsah %}
+    <div class="flex-grow text-gray-900 bg-gray-200 dark:bg-gray-900 dark:text-gray-100 p-5">
+        {{ vytvorit_zoznam(zoznam_poznamok) }}
     </div>
 {% endblock obsah %}

@@ -42,7 +42,7 @@ Poznámkovač využíva nasledujúce technológie:
 
 - [ ] Viac poznámok;
 - [ ] Návod ako písať poznámky;
-- [ ] Zoznam všetkých poznámok a predmetov;
+- [x] Zoznam všetkých poznámok a predmetov;
 - [ ] Drobné navigačné prvky;
 - [ ] Optimalizácia SEO;
 - [ ] Lepšie ovládanie tlače (či chceme tlačiť aj obsah, pojmovú mapu, atď...);
