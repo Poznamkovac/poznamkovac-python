@@ -1,15 +1,37 @@
 {% extends "_base.html" %}
 
-{% block obsah %}
-    {% for kategoria, data in zoznam.items() %}
-        {{ data["nazov"] }} {% if data["popis"] is not none %}({{ data.popis }}){% endif %}
-
-        {% if data["autori"] %}
-            Autori:
-
-            {% for autor in data["autori"] %}
-                - {{ autor }}
-            {% endfor %}
+{% macro vytvorit_zoznam(zoznam_poznamok, druha_kategoria=false) %}
+    <div class="my-2 p-3 {{ 'bg-white dark:bg-gray-900' if druha_kategoria else 'bg-gray-200 dark:bg-gray-800' }} rounded shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+        {% if zoznam_poznamok["kategoria"] is not none %}
+            <h2 class="font-bold text-xl dark:text-gray-200 mb-4"><a href="{{ zoznam_poznamok['href'] }}" class="text-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400">{{ zoznam_poznamok["kategoria"] }}:</a></h2>
         {% endif %}
-    {% endfor %}
+
+        <div class="space-y-2">
+            {% for poznamka in zoznam_poznamok["poznamky"] %}
+            <a href="{{ poznamka['href'] }}" class="flex flex-col py-1 px-3 bg-gray-100 dark:bg-gray-700 rounded transition-colors hover:bg-gray-200 dark:hover:bg-gray-600">
+                <span class="font-medium text-base dark:text-gray-300">{{ poznamka['nazov'] }}</span>
+
+                {% if poznamka['popis'] is not none %}
+                    <span class="text-gray-600 dark:text-gray-400 text-sm">{{ poznamka['popis'] }}</span>
+                {% endif %}
+
+                {% if poznamka['autori'] %}
+                    <div>
+                        <span class="text-gray-500 dark:text-gray-500 text-sm">Autori: {{ ', '.join(poznamka['autori']) }}</span>
+                    </div>
+                {% endif %}
+            </a>
+            {% endfor %}
+
+            {% if zoznam_poznamok["podkategorie"] %}
+                {{ vytvorit_zoznam(zoznam_poznamok["podkategorie"], not druha_kategoria) }}
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+{% block obsah %}
+    <div class="flex-grow text-gray-900 bg-gray-200 dark:bg-gray-900 dark:text-gray-100 p-5">
+        {{ vytvorit_zoznam(zoznam_poznamok) }}
+    </div>
 {% endblock obsah %}

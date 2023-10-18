@@ -19,17 +19,10 @@ KONTEXTY = {
 def kopirovat_sablony_a_poznamky(sablony_cesta: Path, poznamky_cesta: Path, vystupna_cesta: Path) -> None:
     """
         Zkopíruje všetky súbory z `sablony_cesta` a `poznamky_cesta` do `vystupna_cesta`.
-
-        Linux ekvivalent (netestované, iba pre ilustráciu):
-
-        ```bash
-        cp sablony_cesta/**/* vystupna_cesta/ -R
-        cp poznamky_cesta vystupna_cesta/ -R
-        ```
     """
 
     shutil.copytree(sablony_cesta, vystupna_cesta)
-    shutil.copytree(poznamky_cesta, vystupna_cesta / poznamky_cesta.stem)
+    shutil.copytree(poznamky_cesta, vystupna_cesta, dirs_exist_ok=True)
 
 
 
