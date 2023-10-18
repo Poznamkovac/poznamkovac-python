@@ -1,3 +1,5 @@
+import typing as t
+
 import json
 
 from jsonmerge import merge
@@ -17,7 +19,7 @@ VYSTUPNA_CESTA = KORENOVA_CESTA.parent / "site"
 
 
 from poznamkovac.konvertor import vytvorit_poznamky
-from poznamkovac.sablony import ZAKLAD_POZNAMOK, JINJA_ENV, konvertovat_sablonu
+from poznamkovac.sablony import ZAKLAD_POZNAMOK, konvertovat_sablonu
 from poznamkovac.pojmova_mapa import vytvorit_pojmovu_mapu
 
 
@@ -48,11 +50,11 @@ def nacitat_json_konstanty(poznamky_cesta: Path) -> dict:
 
         ...tak potom bude hociktorá hodnota daného kľúča prístupná v Markdown súbore poznámok takto:
 
-        ```
-        # Literárni autori
+        ```jinja
+        {# Literárni autori #}
 
         {% for inicialky, autor in k.sjl.autori.items() %}
-        - {{ autor }}
+            - {{ autor }}
         {% endfor %}
         ```
     """
@@ -77,7 +79,7 @@ def konvertovat_vsetky_subory(vystupna_cesta: Path, poznamky_cesta: Path) -> Non
     """
 
     konstanty = nacitat_json_konstanty(poznamky_cesta)
-    zoznam_poznamok: dict[str, dict[str, str]] = dict()
+    zoznam_poznamok: dict[str, dict[str, t.Any]] = dict()
 
 
     for subor in vystupna_cesta.rglob("*.*"):
