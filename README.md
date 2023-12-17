@@ -1,3 +1,6 @@
+> [!WARNING]  
+> Tento repozitár je archivovaný! Prosím, pozrite si [udržiavanú verziu v Go](https://github.com/SKevo18/poznamkovac).
+
 # Poznámkovač
 
 Poznámkovač je aplikácia pre študentov, ktorá bola vytvorená študentom. S blížiacimi sa maturitnými skúškami som potreboval zefektívniť štúdium a organizáciu poznámok, a preto som vytvoril túto aplikáciu. Poznámky sú upravené z materiálov poskytnutých učiteľmi, knihami a rôznymi zdrojmi z internetu. Určite sa budem snažiť o to, aby boli všetci zúčastnení uvedení, no ak som niekoho vynechal alebo chcete určitý obsah odstrániť, prosím Vás, [kontaktujte ma](https://svit.ac).
